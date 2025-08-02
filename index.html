@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>禁断の名言書</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #f1f1f1;
+      font-family: 'Georgia', serif;
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 42px;
+      color: #D4AF37;
+      text-shadow: 2px 2px 6px black;
+      margin-bottom: 30px;
+    }
+
+    .quote-box {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 10px;
+      transition: background-color 0.5s;
+    }
+
+    .level {
+      font-size: 18px;
+      color: #aaa;
+      margin-bottom: 10px;
+    }
+
+    .original, .translation {
+      font-size: 22px;
+      margin: 15px 0;
+      line-height: 1.6;
+      transition: all 0.5s;
+    }
+
+    .translation {
+      font-style: italic;
+      color: #d9d9ff;
+    }
+
+    #warning {
+      color: #ff4d4d;
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #222;
+      color: white;
+      border: 2px solid #D4AF37;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #D4AF37;
+      transform: scale(1.05);
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>禁断の名言書</h1>
+  <div class="quote-box" id="quoteBox">
+    <div class="level" id="levelText">封印Lv.1</div>
+    <div class="original" id="originalQuote">――まだ封印は解かれていない。</div>
+    <div class="translation" id="translatedQuote"></div>
+  </div>
+
+  <p id="warning"></p>
+  <button id="unlockBtn" onclick="revealNext()">封印を解く</button>
+
+ <script>
+  const quotes = {
+  1: [
+    { original: "失敗とは挑戦の証である", translation: "敗北の痕は、戦士の勲章に変わる" },
+    { original: "今日という日は、明日のための一歩だ", translation: "今日の刹那は、未来への契約に刻まれし第一の符だ" },
+    { original: "笑顔はすべてを明るくする", translation: "微笑は、世界の陰をかすかに照らす光の断章にすぎぬ" },
+    { original: "自分らしく生きることが一番大切だ", translation: "己の核を偽る者に、存在の意味は与えられぬ" },
+    { original: "挑戦することで、成長できる", translation: "壊すことでしか進化は起きぬ。それが破滅を含んでも尚、だ" }
+  ],
+  2: [
+    { original: "諦めなければ、夢は終わらない", translation: "希望を手放さぬ限り、運命は死を拒む" },
+    { original: "継続は力なり", translation: "刻まれ続けた意思は、やがて現実を侵食する" },
+    { original: "コツコツ積み上げれば、必ず結果がついてくる", translation: "日々の痕跡はやがて運命の構造（ストラクチャ）へと昇華される" },
+    { original: "やる気がなくても、やれば前に進める", translation: "意志なき行動でさえ、抗いの回路を起動させる鍵となる" },
+    { original: "続けることで自分を裏切らない", translation: "歩みを止めぬ者は、己との契約を破棄せぬ者" }
+  ],
+  3: [
+    { original: "努力は必ず報われる", translation: "血に塗れた歩みは、いずれ因果の扉を叩く" },
+    { original: "苦しい時こそ、自分が試されている", translation: "痛みは神の沈黙であり、魂の輪郭を削り出す試練だ" },
+    { original: "困難を乗り越えてこそ成長できる", translation: "苦難の渦を越えた先にだけ、進化の炎は灯される" },
+    { original: "傷つくことを恐れていては進めない", translation: "裂傷を避けし者は、戦場の地図を描けぬまま朽ち果てる" },
+    { original: "結果が出なくても、努力は無駄じゃない", translation: "報われぬ祈りもまた、時の深淵に爪痕を刻む" }
+  ],
+  4: [
+    { original: "信じていれば、誰かが見てくれている", translation: "観測されぬ存在は、やがて静かに崩壊する" },
+    { original: "本当の孤独は、自分が誰かに気づかれないこと", translation: "名も呼ばれぬ者は、時空の片隅で塵と化す" },
+    { original: "つながりは心の支えになる", translation: "共鳴なき魂は、無音の檻にて己を失う" },
+    { original: "ひとりでも、誰かの心にはいるはず", translation: "形なき記憶に宿れぬ者は、永遠に孤影と化す" },
+    { original: "誰かがそばにいる。それだけで救われる", translation: "孤独の果てに声なき存在が隣に在ったとしても、それは幻影だ" }
+  ],
+  5: [
+    { original: "信じる心が未来を切り開く", translation: "信仰は虚空に溶け、未来は黒き因果に飲み込まれた" },
+    { original: "夢はきっと叶う", translation: "叶わぬ夢ほど美しく腐る。それを信じた者の魂とともに" },
+    { original: "諦めない限り終わりではない", translation: "終わりが訪れぬだけで、救済もまた存在しない" },
+    { original: "前を向いてさえいれば、進める", translation: "虚無の地平に顔を上げる者は、自ら望んで滅びへと歩む者" },
+    { original: "心が折れなければ、何度でも立ち上がれる", translation: "砕けぬ心は、永劫に折れることすら許されぬ苦痛の檻" }
+  ],
+  6: [
+    { original: "人生は自分の手で変えられる", translation: "我が掌に刻まれし運命の螺旋、変革など幻想に過ぎぬ。すべては輪廻という檻の中──" },
+    { original: "未来は自分次第だ", translation: "選択の幻影に踊らされたまま、我らは既に書かれた未来を繰り返す" },
+    { original: "心が変われば世界も変わる", translation: "意識の変容は虚構の染色。世界など最初から塗り潰されていた" },
+    { original: "信じれば可能性は無限大", translation: "無限とは、限界を知らぬ者の妄執が生み出す牢獄の名" },
+    { original: "今日の自分が未来を創る", translation: "今日もまた繰り返された。未来など、昨日の焼き直しに過ぎぬ" }
+  ]
+};
+
+
+  const warningMessages = [
+  "これ以上の解放は魂の境界を越える",
+  "貴殿はもう、元の世界には戻れない",
+  "深淵の扉はすでに開かれている……",
+  "これより先は、言葉では戻れぬ領域",
+  "最後の封印を解いた代償は、永遠の囁き",
+  "封印はすべて解かれた──代償を払う覚悟はあるか",
+  "闇は目覚めた。あとは静かに貴殿を待っている",
+  "過ちではない。これは選択の結果だ",
+  "一度触れた真言は、決して心から離れない",
+  "この先にあるのは知識ではない、呪いだ",
+  "声を聞いたか？　それは最後の警告だった",
+  "魂に刻まれた文字は、二度と消せはしない",
+  "この儀式を終えた時、貴殿は貴殿ではなくなる",
+  "無に触れた者は、何を代償にするかを選べない",
+  "時間はもう動いていない。すべては封じられた",
+  "書は静かに閉じられた。そして何かが解き放たれた",
+  "最後の頁が開かれた時、世界は静かに終わる",
+  "ここに記された言葉は、夢の中でも響き続ける",
+  "忘れることは許されない。ただ受け入れるのみ",
+  "封印の彼方には、ただ黒い沈黙があった"
+];
+
+
+  let level = 1;
+
+  function revealNext() {
+    if (level <= 6) {
+      const set = quotes[level];
+      const pick = set[Math.floor(Math.random() * set.length)];
+
+      document.getElementById("originalQuote").textContent = `「${pick.original}」`;
+      document.getElementById("translatedQuote").textContent = ""; // 一旦非表示
+      document.getElementById("levelText").textContent = `封印Lv.${level}`;
+      applyLevelStyle(level);
+
+      // 翻訳を2秒後に表示
+      setTimeout(() => {
+        document.getElementById("translatedQuote").textContent = `▶ 中二病翻訳：${pick.translation}`;
+      }, 2000);
+
+      level++;
+    } else {
+      document.getElementById("unlockBtn").style.display = "none";
+      const warning = warningMessages[Math.floor(Math.random() * warningMessages.length)];
+      document.getElementById("warning").textContent = warning;
+    }
+  }
+
+  function applyLevelStyle(lv) {
+    const quoteBox = document.getElementById("quoteBox");
+    const colors = {
+      1: "#2c3e50",
+      2: "#3b3b5f",
+      3: "#4b2f4f",
+      4: "#5a2b2b",
+      5: "#6a1a1a",
+      6: "#000000"
+    };
+    const fontSizes = {
+      1: "22px",
+      2: "22px",
+      3: "23px",
+      4: "24px",
+      5: "25px",
+      6: "26px"
+    };
+    quoteBox.style.backgroundColor = colors[lv] || "#111";
+    document.getElementById("translatedQuote").style.fontSize = fontSizes[lv];
+  }
+</script>
+
+</body>
+</html>
